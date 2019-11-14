@@ -5,7 +5,7 @@ module led_0_7 (
 	output wire [7:0] en
 );
 
-localparam MAXN = (24 * 512) * 18 / 10 * 3 - 8;
+localparam MAXN = (30 * 256) * 36 / 10 * 3 - 8;
 
 wire rst = !nrst;
 
@@ -14,7 +14,7 @@ display8 display8_0 (
 	clk, rst, output_fn, dataout, en
 );
 
-reg [23:0] pi_index;
+reg [16:0] pi_index;
 wire [3:0] pi_digit_out;
 pi_get_digit pgd0(
 	clk, rst, pi_index, pi_digit_out

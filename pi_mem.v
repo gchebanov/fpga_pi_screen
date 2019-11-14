@@ -1,17 +1,23 @@
 module pi_mem # (
-	parameter N = 24 * 512,
+	parameter N = 24 * 256,
 	parameter ADDR_W = 24,
-	parameter DATA_W = 18
+	parameter DATA_W = 36
 ) (
 	input wire clk,
 	input wire [ADDR_W-1:0] addr,
 	output wire [DATA_W-1:0] d_out
 );
 
-reg [DATA_W-1:0] mem [N-1:0];
-reg [DATA_W-1:0] data [2:0];
+reg [DATA_W-1:0] data [1:0];
+wire [DATA_W-1:0] mem_q;
+assign d_out = data[1];
 
-assign d_out = data[2];
+rom i_rom (addr, clk, mem_q);
+
+always @(posedge clk) begin
+	data[0] <= mem_q;
+	data[1] <= data[0];
+end
 
 // 141 _ 592 _ 653 _ 589 _ 793 _ 238 _ 462 _ 643
 // 001_100_0_001
@@ -22,21 +28,5 @@ assign d_out = data[2];
 // 010_011_1_000
 // 100_110_0_010
 // 110_100_0_011
-
-//2e8c1
-//fd4e
-//23bbb
-//39893
-//d0
-
-initial begin
-	$readmemh("mem.hex", mem, 0, N-1);
-end
-
-always @(posedge clk) begin
-	data[0] <= mem[addr];
-	data[1] <= data[0];
-	data[2] <= data[1];
-end
 
 endmodule // pi_mem
