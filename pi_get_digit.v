@@ -3,7 +3,7 @@ module pi_get_digit # (
 ) (
 	input wire clk,
 	input wire [N-1:0] pi_index,
-	output logic [3:0] pi_digit
+	output reg [3:0] pi_digit
 );
 
 localparam MEM_W = 36;
@@ -23,7 +23,6 @@ pi_mem pi_mem1 (clk, addr, mem_q);
 reg [9:0] dpd_b_in;
 reg [3:0] dpd_d_out [2:0];
 dpd_decoder dpd_ins0(dpd_b_in, dpd_d_out);
-assign pi_digit = dpd_d_out[2 - digit_shift];
 
 reg[17:0] mul_a, mul_b;
 reg[35:0] mul_ab;
@@ -75,6 +74,7 @@ always @(posedge clk) begin
 end
 
 always @(posedge clk) begin
+	pi_digit <= dpd_d_out[2 - digit_shift];
 	cnt <= cnt + 1;
 	addr_shift <= digit_base10 - addr_base_unshift;
 	digit_shift <= pi_index - digit_base_unshift;

@@ -1,5 +1,4 @@
 module pi_mem # (
-	parameter N = 24 * 256,
 	parameter ADDR_W = 24,
 	parameter DATA_W = 36
 ) (

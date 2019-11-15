@@ -15,27 +15,31 @@ display8 display8_0 (
 );
 
 reg [16:0] pi_index;
-wire [3:0] pi_digit_out;
+reg [3:0] pi_digit_out;
 pi_get_digit pgd0(
-	clk, rst, pi_index, pi_digit_out
+	clk, pi_index, pi_digit_out
 );
 
 reg [31:0] cnt, pi_digit_base;
+reg pi_digit_jump;
+
 always @(posedge clk) begin
 	if (rst) begin
 		cnt <= 0;
 		pi_digit_base <= 0;
 		pi_index <= 0;
 		output_fn <= '{default:0};
+		pi_digit_jump <= 0;
 	end else begin
 		cnt <= cnt + 1;
 		if (pi_digit_base < MAXN) begin
-			pi_digit_base <= pi_digit_base + (cnt[24:0] == '1 ? 1 : 0);
+			pi_digit_base <= pi_digit_base + pi_digit_jump;
 		end else begin
 			pi_digit_base <= 0;
 		end
 		pi_index <= pi_digit_base + cnt[15:13];
 		output_fn[cnt[15:13]] <= pi_digit_out;
+		pi_digit_jump <= (cnt[24:0] == '1);
 	end
 end
 
